@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:latest
+    restart: always
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    ports:
+      - 5432:5432
+    volumes:
+      - ./docker/postgres/:/docker-entrypoint-initdb.d/
+ 
+  backend:
+    build:
+      context: ./
+      dockerfile: ./docker/backend/Dockerfile
+    links:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/dbname
+      - SPRING_DATASOURCE_USERNAME=dbuser
+      - SPRING_DATASOURCE_PASSWORD=dbpwd
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=create-only
+      - DRIVER_DATASOURCE=org.postgresql.Driver
+      - DIALECT_HIBERNATE=org.hibernate.dialect.PostgreSQLDialect
+
+  nginx:
+    image: nginx:1.23.3-alpine
+    build: 
+      context: ./
+      dockerfile: ./docker/nginx/Dockerfile
+    ports:
+      - "82:82"
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - backend
+  
+ 

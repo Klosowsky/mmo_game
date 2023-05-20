@@ -1,0 +1,41 @@
+
+http://localhost:8080/hero/createhero
+Request body:
+{
+    "classId":1,
+    "heroName":"test"
+}
+Response:
+{
+    "heroId": 17,
+    "level": 1,
+    "agility": 1,
+    "strength": 1,
+    "intellect": 5,
+    "heroName": "test"
+}
+
+//-------
+
+http://localhost:8080/hero/save
+Request body( wit deleted id will insert new )
+{
+    "heroId": 16,
+    "level": 1,
+    "agility": 1,
+    "strength": 1,
+    "intellect": 5,
+    "heroName": "test2111",
+  	"heroClass":"mage"
+}
+Response:
+{
+    "heroId": 23,
+    "level": 1,
+    "agility": 1,
+    "strength": 1,
+    "intellect": 5,
+    "heroName": "test2111",
+    "heroClass": "mage"
+}
+//-------
