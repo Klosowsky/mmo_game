@@ -40,6 +40,12 @@ public class HeroService {
         return heroesList;
     }
 
+    public Hero levelUp(long id){
+        Hero hero = findById(id);
+        hero.levelUp();
+        return hero;
+    }
+
 
 
 }

@@ -20,7 +20,6 @@ import java.util.List;
 @RequestMapping("/hero")
 public class HeroController {
 
-
     HeroService heroService;
 
     @Autowired
@@ -58,8 +57,7 @@ public class HeroController {
         Hero hero = heroFactory.createHero();
         hero.setHeroName(rqBody.getHeroName());
         try{
-            heroService.saveHero(hero);
-            return ResponseEntity.ok(hero);
+            return ResponseEntity.ok(heroService.saveHero(hero));
         }catch(Exception ex){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -88,6 +86,15 @@ public class HeroController {
     public ResponseEntity<List<Hero>> getAllHeroes(){
         try{
             return ResponseEntity.ok(heroService.getAllHeroes());
+        }catch(Exception ex){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @RequestMapping("/levelup")
+    public ResponseEntity<Hero> heroLevelUp(@RequestBody Hero heroRequest){
+        try{
+            return ResponseEntity.ok(heroService.saveHero(heroService.levelUp(heroRequest.getHeroId())));
         }catch(Exception ex){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

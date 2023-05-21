@@ -19,6 +19,12 @@ public class HeroProxy extends Hero {
     public void printHeroStatistics() {
 
     }
+
+    @Override
+    public void levelUp() {
+
+    }
+
     Hero hero;
     public Hero toValidHero(){
         System.out.println("clas = "+this.getHeroClass());
