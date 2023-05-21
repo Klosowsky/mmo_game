@@ -18,7 +18,7 @@ Response:
 //-------
 
 http://localhost:8080/hero/save
-Request body( wit deleted id will insert new )
+Request body( wit not existing id will insert new )
 {
     "heroId": 16,
     "level": 1,
@@ -38,4 +38,65 @@ Response:
     "heroName": "test2111",
     "heroClass": "mage"
 }
+//-------
+http://localhost:8080/hero/removehero
+Request body:
+{
+    "heroId": 3
+}
+Response:
+{
+    "heroId": 3,
+    "level": 1,
+    "agility": 1,
+    "strength": 1,
+    "intellect": 5,
+    "heroName": "test",
+    "heroClass": "mage"
+}
+//-------
+http://localhost:8080/hero/getallheroes
+Response:
+[{
+    "heroId": 1,
+    "level": 1,
+    "agility": 1,
+    "strength": 1,
+    "intellect": 5,
+    "heroName": "test2111",
+    "heroClass": "mage"
+}, {
+    "heroId": 2,
+    "level": 1,
+    "agility": 1,
+    "strength": 1,
+    "intellect": 5,
+    "heroName": "test",
+    "heroClass": "mage"
+}, {
+    "heroId": 4,
+    "level": 1,
+    "agility": 1,
+    "strength": 1,
+    "intellect": 5,
+    "heroName": "test",
+    "heroClass": "mage"
+}, {
+    "heroId": 5,
+    "level": 1,
+    "agility": 1,
+    "strength": 5,
+    "intellect": 1,
+    "heroName": "test",
+    "heroClass": "warrior"
+}, {
+    "heroId": 6,
+    "level": 1,
+    "agility": 5,
+    "strength": 1,
+    "intellect": 1,
+    "heroName": "test",
+    "heroClass": "archer"
+}]
+
 //-------
