@@ -1,12 +1,15 @@
 package com.to.backend.controller;
 
+import com.to.backend.decorator.HeroEquipmentDecorator;
 import com.to.backend.enums.HeroClassesEnum;
 import com.to.backend.factory.ArcherFactory;
 import com.to.backend.factory.HeroFactory;
 import com.to.backend.factory.MageFactory;
 import com.to.backend.factory.WarriorFactory;
 import com.to.backend.model.*;
+import com.to.backend.services.EquipmentService;
 import com.to.backend.services.HeroService;
+import com.to.backend.utils.HeroRankingSingleton;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,16 +18,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/hero")
 public class HeroController {
 
     HeroService heroService;
+    EquipmentService equipmentService;
 
     @Autowired
-    public HeroController(HeroService heroService){
+    public HeroController(HeroService heroService, EquipmentService equipmentService){
         this.heroService = heroService;
+        this.equipmentService = equipmentService;
     }
 
     @RequestMapping("/save")
@@ -56,8 +62,11 @@ public class HeroController {
         }
         Hero hero = heroFactory.createHero();
         hero.setHeroName(rqBody.getHeroName());
+        Equipment equipment = new Equipment();
         try{
+            hero.setEquipment(equipmentService.saveEquipment(equipment));
             return ResponseEntity.ok(heroService.saveHero(hero));
+
         }catch(Exception ex){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -66,8 +75,25 @@ public class HeroController {
 
     @RequestMapping("/gethero")
     public ResponseEntity<Hero> getHero(@RequestBody Hero heroRequest){
+        HeroProxy heroProxy = new HeroProxy(heroService.findById(heroRequest.getHeroId()));
+        Hero hero = heroProxy.toValidHero();
         try{
-            return ResponseEntity.ok(heroService.findById(heroRequest.getHeroId()));
+            return ResponseEntity.ok(hero);
+        }catch(Exception ex){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @RequestMapping("/getherofullstat")
+    public ResponseEntity<HeroStatistics> getHeroFullStat(@RequestBody Hero heroRequest){
+        try{
+            HeroProxy heroProxy = new HeroProxy(heroService.findById(heroRequest.getHeroId()));
+            Hero hero = heroProxy.toValidHero();
+            System.out.println("e");
+            HeroEquipmentDecorator heroEquipmentDecorator = new HeroEquipmentDecorator(hero);
+            System.out.println("eeeeee");
+
+            return ResponseEntity.ok(heroEquipmentDecorator.getHeroStatistics());
         }catch(Exception ex){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -91,6 +117,15 @@ public class HeroController {
         }
     }
 
+    @RequestMapping("/addexp")
+    public ResponseEntity<Hero> heroAddExp(@RequestBody Hero heroRequest){
+        try{
+            return ResponseEntity.ok(heroService.saveHero(heroService.increaseExp(heroRequest.getHeroId())));
+        }catch(Exception ex){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
     @RequestMapping("/levelup")
     public ResponseEntity<Hero> heroLevelUp(@RequestBody Hero heroRequest){
         try{
@@ -100,6 +135,16 @@ public class HeroController {
         }
     }
 
+
+    @RequestMapping("/ranking")
+    public ResponseEntity<Map<Integer,Hero>> showHeroRanking(){
+        try{
+            HeroRankingSingleton heroRankingSingleton = HeroRankingSingleton.getInstance(heroService.getAllHeroes());
+            return ResponseEntity.ok(heroRankingSingleton.getHeroRankingMap());
+        }catch(Exception ex){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
 
 }

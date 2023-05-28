@@ -29,5 +29,6 @@ public class Warrior extends Hero {
         agility+=3;
         strength+=5;
         intellect+=1;
+        exp=0;
     }
 }

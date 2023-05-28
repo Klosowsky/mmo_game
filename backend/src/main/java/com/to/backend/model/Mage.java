@@ -32,5 +32,6 @@ public class Mage  extends Hero {
         agility+=2;
         strength+=2;
         intellect+=5;
+        exp=0;
     }
 }

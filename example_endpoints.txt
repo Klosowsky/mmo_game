@@ -1,3 +1,4 @@
+HERO
 
 http://localhost:8080/hero/createhero
 Request body:
@@ -100,3 +101,88 @@ Response:
 }]
 
 //-------
+http://localhost:8080/hero/levelup
+{
+    "heroId": 1
+}
+Response:
+{
+    "heroId": 23,
+    "level": 1,
+    "agility": 1,
+    "strength": 1,
+    "intellect": 5,
+    "heroName": "test2111",
+    "heroClass": "mage"
+}
+// -----------
+http://localhost:8080/hero/addexp
+Request:
+{
+    "heroId": 1
+}
+Response:
+{
+    "heroId": 1,
+    "level": 3,
+    "agility": 7,
+    "strength": 15,
+    "intellect": 3,
+    "heroName": "test2",
+    "heroClass": "warrior",
+    "exp": 0,
+    "neededExp": 9
+}
+
+
+
+//-----------------------------------------------------------------
+ITEM
+
+http://localhost:8080/item/save
+Request:
+{
+  "requiredLevel":4,
+   "itemName": "test444",
+  "requiredClass":"mage",
+  "itemType":"weapon"
+}
+Response:
+{
+    "id": 11,
+    "requiredLevel": 4,
+    "bonusAgility": 0,
+    "bonusStrength": 0,
+    "bonusIntellect": 0,
+    "requiredClass": "mage",
+    "itemType": "weapon",
+    "itemName": "test444"
+}
+//-------
+http://localhost:8080/item/getallowed
+Request:
+{
+    "requiredClass": "mage",
+  	"requiredLevel":5,
+  	"itemType":"weapon"
+}
+Response:
+[{
+    "id": 2,
+    "requiredLevel": 0,
+    "bonusAgility": 0,
+    "bonusStrength": 0,
+    "bonusIntellect": 0,
+    "requiredClass": "mage",
+    "itemType": "weapon",
+    "itemName": "test1"
+}, {
+    "id": 10,
+    "requiredLevel": 5,
+    "bonusAgility": 0,
+    "bonusStrength": 0,
+    "bonusIntellect": 0,
+    "requiredClass": "mage",
+    "itemType": "weapon",
+    "itemName": "test555"
+}]

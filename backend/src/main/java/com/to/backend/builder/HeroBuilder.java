@@ -1,5 +1,6 @@
 package com.to.backend.builder;
 
+import com.to.backend.model.Equipment;
 import com.to.backend.model.Hero;
 
 public class HeroBuilder {
@@ -42,9 +43,27 @@ public class HeroBuilder {
         return this;
     }
 
+    public HeroBuilder setExp(int exp){
+        hero.setExp(exp);
+        return this;
+    }
+
+    public HeroBuilder setNeededExp(int neededExp){
+        hero.setNeededExp(neededExp);
+        return this;
+    }
+
+    public HeroBuilder setEquipment(Equipment equipment){
+        hero.setEquipment(equipment);
+        return this;
+    }
+
+
     public Hero build(){
         return hero;
     }
+
+
 
 
 }

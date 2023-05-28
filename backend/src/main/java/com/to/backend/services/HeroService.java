@@ -2,6 +2,7 @@ package com.to.backend.services;
 
 import com.to.backend.model.Hero;
 import com.to.backend.repository.HeroRepository;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+@Transactional
 @Service
 public class HeroService {
 
@@ -43,7 +45,13 @@ public class HeroService {
     public Hero levelUp(long id){
         Hero hero = findById(id);
         hero.levelUp();
-        return hero;
+        return saveHero(hero);
+    }
+
+    public Hero increaseExp(long id){
+        Hero hero = findById(id);
+        hero.increaseExp();
+        return saveHero(hero);
     }
 
 

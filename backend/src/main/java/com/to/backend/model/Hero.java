@@ -1,12 +1,21 @@
 package com.to.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.persistence.*;
 
 @Table(name="Heroes")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name="hero_class", discriminatorType = DiscriminatorType.STRING)
 @JsonDeserialize(as = HeroProxy.class)
-@DiscriminatorColumn(name="hero_class")
+/*@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "heroClass")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = Archer.class, name = "archer"),
+        @JsonSubTypes.Type(value = Mage.class, name = "mage"),
+        @JsonSubTypes.Type(value = Warrior.class, name = "warrior")
+})*/
+
 @Entity
 public abstract class Hero {
 
@@ -21,6 +30,12 @@ public abstract class Hero {
     protected String heroName;
     @Column(name="hero_class", insertable = false, updatable = false)
     protected String heroClass;
+    protected int exp=0;
+    protected int neededExp=3;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "equipment_id")
+    protected Equipment equipment;
     public Hero(){
         setHeroStatistics();
     }
@@ -85,5 +100,40 @@ public abstract class Hero {
         this.heroClass = heroClass;
     }
 
+    public int getExp() {
+        return exp;
+    }
+    public void increaseExp(){
+        exp++;
+        if(exp>=neededExp){
+            levelUp();
+            neededExp+=3;
+        }
+    }
+    public void setExp(int exp) {
+        this.exp = exp;
+    }
+
+    public int getNeededExp() {
+        return neededExp;
+    }
+
+    public void setNeededExp(int neededExp) {
+        this.neededExp = neededExp;
+    }
+
+    public Equipment getEquipment() {
+        return equipment;
+    }
+
+    public void setEquipment(Equipment equipment) {
+        this.equipment = equipment;
+    }
+
+    public HeroStatistics getHeroStatistics(){
+        return new HeroStatistics(agility,strength,intellect);
+    }
+
     public abstract void levelUp();
+
 }
