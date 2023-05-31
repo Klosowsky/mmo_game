@@ -7,9 +7,12 @@ import com.to.backend.factory.HeroFactory;
 import com.to.backend.factory.MageFactory;
 import com.to.backend.factory.WarriorFactory;
 import com.to.backend.model.*;
+import com.to.backend.services.BagService;
 import com.to.backend.services.EquipmentService;
 import com.to.backend.services.HeroService;
+import com.to.backend.services.ItemService;
 import com.to.backend.utils.HeroRankingSingleton;
+import com.to.backend.utils.ItemDrawer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,11 +29,15 @@ public class HeroController {
 
     HeroService heroService;
     EquipmentService equipmentService;
+    ItemService itemService;
+    BagService bagService;
 
     @Autowired
-    public HeroController(HeroService heroService, EquipmentService equipmentService){
+    public HeroController(HeroService heroService, EquipmentService equipmentService, ItemService itemService, BagService bagService){
         this.heroService = heroService;
         this.equipmentService = equipmentService;
+        this.itemService = itemService;
+        this.bagService = bagService;
     }
 
     @RequestMapping("/save")
@@ -144,6 +151,31 @@ public class HeroController {
         }catch(Exception ex){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    @RequestMapping("/getrandomitem")
+    public ResponseEntity<Item> getRandomItem(@RequestBody Hero heroRequest){
+        try{
+            HeroProxy heroProxy = new HeroProxy(heroService.findById(heroRequest.getHeroId()));
+            Hero hero = heroProxy.toValidHero();
+            System.out.println("e "+itemService.getAllItems());
+            Item drawnItem = ItemDrawer.DrawItemForHero(itemService.getAllItems(),hero);
+            System.out.println("ee " + drawnItem);
+            HeroItemInBag heroItemInBag = new HeroItemInBag();
+            System.out.println("eee");
+            heroItemInBag.setItem(drawnItem);
+            System.out.println("eeee");
+            heroItemInBag.setHero(heroService.findById(heroRequest.getHeroId()));
+            System.out.println("eeeee");
+            bagService.assignToHero(heroItemInBag);
+            System.out.println("eeeeee");
+            return ResponseEntity.ok(drawnItem);
+        }catch(Exception ex){
+            System.out.println(ex.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+
     }
 
 

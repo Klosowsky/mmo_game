@@ -23,3 +23,7 @@ INSERT INTO public.equipments (armor_id, helmet_id, weapon_id) values (5, 8, 1);
 
 -- HEROES
 INSERT INTO public.heroes (agility, equipment_id, exp, hero_name, intellect, level, needed_exp, strength, hero_class) values (1, 1, 0, 'test_mage1', 5, 1, 3, 1, 'mage');
+
+-- BAG
+INSERT INTO public.bag (hero_id,item_id) VALUES (1,1);
+INSERT INTO public.bag (hero_id,item_id) VALUES (1,5);
