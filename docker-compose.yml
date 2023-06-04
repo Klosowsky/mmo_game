@@ -26,6 +26,8 @@ services:
       - SPRING_JPA_HIBERNATE_DDL_AUTO=create-only
       - DRIVER_DATASOURCE=org.postgresql.Driver
       - DIALECT_HIBERNATE=org.hibernate.dialect.PostgreSQLDialect
+    ports:
+      - "8080:8080"
 
   nginx:
     image: nginx:1.23.3-alpine

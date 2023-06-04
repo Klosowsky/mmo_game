@@ -7,10 +7,27 @@ import java.util.*;
 public class HeroRankingSingleton {
     private static HeroRankingSingleton heroRanking;
 
-    private Map<Integer, Hero> heroRankingMap = new HashMap<>();
+    private Map<Integer, Hero> heroRankingMap;
 
-    private HeroRankingSingleton(List<Hero> heroList){
+    private HeroRankingSingleton(){
+
+    }
+
+    public static HeroRankingSingleton getInstance(){
+        if( heroRanking== null ){
+            synchronized (HeroRankingSingleton.class){
+                if(heroRanking==null){
+                    heroRanking=new HeroRankingSingleton();
+                }
+            }
+        }
+        return heroRanking;
+    }
+
+    public void refreshRanking(List<Hero> heroList){
+        heroRankingMap = new HashMap<>();
         heroList.sort(Comparator.comparingInt(Hero::getLevel));
+        Collections.reverse(heroList);
         int i=1;
         for (Hero  hero : heroList) {
             heroRankingMap.put(i,hero);
@@ -18,18 +35,8 @@ public class HeroRankingSingleton {
         }
     }
 
-    public static HeroRankingSingleton getInstance(List<Hero> heroList){
-        if( heroRanking== null ){
-            synchronized (HeroRankingSingleton.class){
-                if(heroRanking==null){
-                    heroRanking=new HeroRankingSingleton(heroList);
-                }
-            }
-        }
-        return heroRanking;
-    }
-
     public Map<Integer,Hero> getHeroRankingMap(){
+
         return this.heroRankingMap;
     }
 

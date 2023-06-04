@@ -27,9 +27,21 @@ public class HeroEquipmentDecorator extends Hero {
         Equipment equipment = hero.getEquipment();
         HeroStatistics heroStatistics = new HeroStatistics();
         System.out.println("eeee");
-        heroStatistics.setAgility(hero.getAgility()+equipment.getArmor().getBonusAgility()+equipment.getHelmet().getBonusAgility()+equipment.getWeapon().getBonusAgility());
-        heroStatistics.setIntellect(hero.getIntellect()+equipment.getArmor().getBonusIntellect()+equipment.getHelmet().getBonusIntellect()+equipment.getWeapon().getBonusIntellect());
-        heroStatistics.setStrength(hero.getStrength()+equipment.getArmor().getBonusStrength()+equipment.getHelmet().getBonusStrength()+equipment.getWeapon().getBonusStrength());
+        heroStatistics.setAgility(hero.getAgility()+
+                (equipment.getArmor()==null ? 0 : equipment.getArmor().getBonusAgility())+
+                (equipment.getHelmet()==null ? 0 : equipment.getHelmet().getBonusAgility())+
+                (equipment.getWeapon()==null ? 0 : equipment.getWeapon().getBonusAgility()));
+
+        heroStatistics.setIntellect(hero.getIntellect()+
+                (equipment.getArmor()==null ? 0 : equipment.getArmor().getBonusIntellect())+
+                (equipment.getHelmet()==null ? 0 : equipment.getHelmet().getBonusIntellect())+
+                (equipment.getWeapon()==null ? 0 : equipment.getWeapon().getBonusIntellect()));
+
+        heroStatistics.setStrength(hero.getStrength()+
+                (equipment.getArmor()==null ? 0 : equipment.getArmor().getBonusStrength())+
+                (equipment.getHelmet()==null ? 0 : equipment.getHelmet().getBonusStrength())+
+                (equipment.getWeapon()==null ? 0 : equipment.getWeapon().getBonusStrength()));
+
         return heroStatistics;
     }
 

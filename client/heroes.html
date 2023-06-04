@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>mmo_to</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+    }
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    li {
+      margin-bottom: 10px;
+      padding: 10px;
+      background-color: #f4f4f4;
+      cursor: pointer;
+    }
+    .add-button {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Hero ranking</h1>
+  
+  <div class="add-button">
+    <button onclick="openAddHeroPage()">Create Hero</button>
+  </div>
+  
+  <ul id="hero-list"></ul>
+
+  <script>
+
+    function openAddHeroPage() {
+      window.location.href = "addhero.html";
+    }
+
+    function renderHeroList(heroes) {
+      const heroListElement = document.getElementById("hero-list");
+
+      heroListElement.innerHTML = "";
+
+      for (let [key, hero] of Object.entries(heroes)) {
+        const listItem = document.createElement("li");
+        listItem.textContent = `Poz: ${key}  -  ${hero.heroName}  -  Level: ${hero.level}  -  Class: ${hero.heroClass}     `;
+
+        listItem.addEventListener("click", () => {
+          redirectToHeroDetails(hero.heroId);
+        });
+
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "Delete";
+        deleteButton.classList.add("delete-button");
+
+        deleteButton.addEventListener("click", (event) => {
+          event.stopPropagation();
+          deleteHero(hero.heroId);
+        });
+
+        listItem.appendChild(deleteButton);
+        heroListElement.appendChild(listItem);
+      }
+    }
+
+
+    fetch("http://localhost:8080/hero/ranking" )
+      .then(response => {
+        return response.json();
+      } )
+      .then(data => {
+        renderHeroList(data);
+      })
+      .catch(error => {
+        console.log("Error fetching hero data:", error);
+      });
+
+
+
+    function redirectToHeroDetails(heroId){
+      var jsonHeroId = { "heroId": heroId };
+      localStorage.setItem("jsonHeroId", JSON.stringify(jsonHeroId));
+      window.location.href = "hero.html";
+    }
+
+
+    function deleteHero(heroId) {
+      fetch(`http://localhost:8080/hero/removehero`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({"heroId":heroId})
+      })
+              .then(response => {
+                if (response.ok) {
+                  location.reload();
+                } else {
+                  console.log("Error deleting hero:", response.statusText);
+                }
+              })
+              .catch(error => {
+                console.log("Error deleting hero:", error);
+              });
+    }
+  </script>
+</body>
+</html>

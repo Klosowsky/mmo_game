@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.persistence.*;
 
 @Table(name="equipments")
-//@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Entity
 public class Equipment {
     @Id

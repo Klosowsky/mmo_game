@@ -22,6 +22,10 @@ public class ScriptExecutor {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    public Integer checkIfRecordsExists(){
+        String query="SELECT COUNT(*) FROM public.items";
+        return jdbcTemplate.queryForObject(query,Integer.class);
+    }
     public void executeScript(String scriptPath) {
         try {
             InputStream inputStream = getClass().getResourceAsStream(scriptPath);
