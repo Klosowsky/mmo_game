@@ -22,4 +22,12 @@ public class Warrior extends Hero {
     public void printHeroStatistics() {
 
     }
+
+    @Override
+    public void levelUp() {
+        level++;
+        agility+=3;
+        strength+=5;
+        intellect+=1;
+    }
 }

@@ -25,4 +25,12 @@ public class Mage  extends Hero {
     public void printHeroStatistics() {
 
     }
+
+    @Override
+    public void levelUp() {
+        level++;
+        agility+=2;
+        strength+=2;
+        intellect+=5;
+    }
 }

@@ -8,17 +8,17 @@ import jakarta.persistence.*;
 @JsonDeserialize(as = HeroProxy.class)
 @DiscriminatorColumn(name="hero_class")
 @Entity
-
 public abstract class Hero {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long heroId;
+    protected long heroId;
     protected int level=1;
-    int agility=1;
-    int strength=1;
-    int intellect=1;
-    String heroName;
+    protected int agility=1;
+    protected int strength=1;
+    protected int intellect=1;
+    @Column(name = "heroName", unique = true, nullable = false)
+    protected String heroName;
     @Column(name="hero_class", insertable = false, updatable = false)
     protected String heroClass;
     public Hero(){
@@ -84,4 +84,6 @@ public abstract class Hero {
     public void setHeroClass(String heroClass) {
         this.heroClass = heroClass;
     }
+
+    public abstract void levelUp();
 }

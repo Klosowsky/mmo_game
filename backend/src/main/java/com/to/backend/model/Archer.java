@@ -24,5 +24,11 @@ public class Archer extends Hero {
 
     }
 
-
+    @Override
+    public void levelUp() {
+        level++;
+        agility+=5;
+        strength+=3;
+        intellect+=1;
+    }
 }
