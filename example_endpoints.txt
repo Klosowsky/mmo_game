@@ -101,6 +101,12 @@ Response:
 }]
 
 //-------
+gethero
+{
+    "heroId": 1
+}
+
+/-----------
 http://localhost:8080/hero/levelup
 {
     "heroId": 1

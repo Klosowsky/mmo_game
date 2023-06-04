@@ -33,7 +33,17 @@ public class ItemController {
             Item item = itemProxy.toValidItem();
             return ResponseEntity.ok(itemService.saveItem(item));
         }catch(Exception ex){
-            System.out.println("ex" +ex.getMessage());
+            System.out.println(ex.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @RequestMapping("/removeitem")
+    public ResponseEntity<Item> removeItem(@RequestBody Item itemRequest){
+        try{
+            return ResponseEntity.ok(itemService.removeItem(itemRequest.getId()));
+        }catch(Exception ex){
+            System.out.println(ex.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -44,7 +54,7 @@ public class ItemController {
 
             return ResponseEntity.ok(itemService.getItemsByClass(item.getRequiredClass()));
         }catch(Exception ex){
-            System.out.println("ex" +ex.getMessage());
+            System.out.println(ex.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -55,7 +65,7 @@ public class ItemController {
         try{
             return ResponseEntity.ok(itemService.getItemsByLevelAndClassAndType(item.getRequiredLevel()+1,item.getRequiredClass(),item.getItemType()));
         }catch(Exception ex){
-            System.out.println("ex" +ex.getMessage());
+            System.out.println(ex.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }

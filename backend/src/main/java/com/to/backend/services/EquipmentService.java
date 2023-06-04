@@ -24,5 +24,13 @@ public class EquipmentService  {
         return equipmentRepository.save(equipment);
     }
 
+    public void removeEquipment(long id){
+        equipmentRepository.deleteById(id);
+    }
+
+    public Equipment getById(long id){
+        return equipmentRepository.findById(id).orElseThrow(NullPointerException::new);
+    }
+
 
 }

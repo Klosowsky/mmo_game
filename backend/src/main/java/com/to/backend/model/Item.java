@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 
 @Table(name="items")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-//@JsonDeserialize(as = ItemProxy.class)
 @DiscriminatorColumn(name="item_type")
 @Entity
 public abstract class Item {

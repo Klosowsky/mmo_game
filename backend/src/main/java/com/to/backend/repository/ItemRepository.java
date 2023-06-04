@@ -9,6 +9,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 
     List<Item> findAllByRequiredClass(String requiredClass);
 
+    Item findById(long id);
     List<Item> findAllByRequiredLevelLessThan(int requiredLevel);
 
     List<Item> findAllByRequiredLevelLessThanAndRequiredClassAndItemType(int requiredLevel, String requiredClass, String itemType);

@@ -17,13 +17,9 @@ public class BackendApplication {
 	public static void main(String[] args) throws IOException {
 		ApplicationContext applicationContext = SpringApplication.run(BackendApplication.class, args);
 		ScriptExecutor scriptExecutor =applicationContext.getBean(ScriptExecutor.class);
-		scriptExecutor.executeScript("/data.sql");
-		System.out.println("start");
-/*		HeroFactory heroFactory = new MageFactory();
-		Hero hero = heroFactory.createHero();
-		hero.setHeroStatistics();
-		HeroService heroService = new HeroService();
-		heroService.saveHero(hero);*/
+		if(scriptExecutor.checkIfRecordsExists() ==0) {
+			scriptExecutor.executeScript("/data.sql");
+		}
 	}
 
 }

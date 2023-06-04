@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MMO TO</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .header{
+      display: flex;
+      width: 100vw;
+      margin: 0;
+      flex-direction: column;
+      align-content: center;
+    }
+
+    h1 {
+      text-align: center;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      max-width: 300px;
+      margin: 0 auto;
+    }
+    label {
+      margin-bottom: 10px;
+    }
+    input, select {
+      padding: 8px;
+      margin-bottom: 10px;
+    }
+    button {
+      padding: 8px 16px;
+    }
+  </style>
+</head>
+<body>
+<div class="header" onclick="homePage()"><h1>MMO TO  </h1></div>
+
+<h1>Create Hero</h1>
+
+<form id="hero-form">
+  <label for="name">Name:</label>
+  <input type="text" id="name" name="name" required>
+
+  <label for="type">Type:</label>
+  <select id="type" name="type">
+    <option value="3">Archer</option>
+    <option value="1">Mage</option>
+    <option value="2">Warrior</option>
+  </select>
+
+  <button type="submit">Create</button>
+</form>
+
+<script>
+
+  function redirectToHeroDetails(heroId){
+    var jsonHeroId = { "heroId": heroId };
+
+    localStorage.setItem("jsonHeroId", JSON.stringify(jsonHeroId));
+
+    window.location.href = "hero.html";
+  }
+
+  function handleSubmit(event) {
+    event.preventDefault(); // Prevent form from submitting
+
+
+    const form = document.getElementById("hero-form");
+    const name = form.elements.name.value;
+    const type = form.elements.type.value;
+
+    const hero = {
+      heroName: name,
+      classId: type
+    };
+
+    createHero(hero)
+            .then(response => {
+                redirectToHeroDetails(response.heroId);
+            })
+            .catch(error => {
+              console.error("Error creating hero:", error);
+            });
+  }
+
+  function createHero(hero) {
+    const url = "http://localhost:8080/hero/createhero";
+    return fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(hero)
+    })
+            .then(response => {
+              if (!response.ok) {
+                throw new Error("Error creating hero");
+              }
+              return response.json();
+            });
+  }
+  function homePage(){
+    window.location.href = "heroes.html";
+  }
+
+  const form = document.getElementById("hero-form");
+  form.addEventListener("submit", handleSubmit);
+</script>
+</body>
+</html>

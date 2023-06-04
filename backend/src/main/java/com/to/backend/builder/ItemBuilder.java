@@ -3,7 +3,7 @@ package com.to.backend.builder;
 import com.to.backend.model.Hero;
 import com.to.backend.model.Item;
 
-public class ItemBuilder {
+public class ItemBuilder implements builder<Item> {
     private Item item;
 
     public ItemBuilder(Item item){

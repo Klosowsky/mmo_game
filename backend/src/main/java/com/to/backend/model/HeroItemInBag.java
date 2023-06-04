@@ -8,11 +8,11 @@ public class HeroItemInBag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(orphanRemoval = false)
     @JoinColumn(name = "item_id")
     Item item;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(orphanRemoval = false)
     @JoinColumn(name = "hero_id")
     Hero hero;
 

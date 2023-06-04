@@ -2,8 +2,9 @@ package com.to.backend.builder;
 
 import com.to.backend.model.Equipment;
 import com.to.backend.model.Hero;
+import com.to.backend.model.Item;
 
-public class HeroBuilder {
+public class HeroBuilder  implements builder<Hero> {
     Hero hero;
     public HeroBuilder(Hero hero){
         this.hero=hero;

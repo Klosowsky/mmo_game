@@ -2,7 +2,7 @@ package com.to.backend.builder;
 
 import com.to.backend.model.*;
 
-public class EquipmentBuider {
+public class EquipmentBuider  implements builder<Equipment> {
 
     Equipment equipment;
 

@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>mmo_to</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            width: 100vw;
+            height: 100vh;
+            padding: 0;
+        }
+
+        .header{
+            display: flex;
+            width: 100vw;
+            flex-direction: column;
+            align-content: center;
+        }
+
+        .details{
+            display: flex;
+            flex-direction: row;
+            width: 100vw;
+            height: auto;
+        }
+
+        .left-col{
+            display: flex;
+            width: 50vw;
+            flex-direction: column;
+        }
+
+        .right-col{
+            display: flex;
+            width: 50vw;
+            flex-direction: column;
+        }
+
+        .items-row{
+            display: flex;
+            width: 100vw;
+            flex-direction: column;
+            align-content: center;
+            overflow: hidden;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        button {
+            margin-top: 13px;
+            margin-bottom: 23px;
+            width: 150px;
+            align-self: center;
+
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            overflow:scroll;
+        }
+
+        li {
+            background-color: #f4f4f4;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header" onclick="homePage()"><h1>MMO_TO</h1></div>
+    <div class="details">
+        <div class="left-col">
+            <h1>Hero details</h1>
+
+            <label for="name">Name:</label>
+            <p id="name">-</p>
+
+            <label for="level">Level:</label>
+            <p id="level">-</p>
+            <label for="level">Exp:</label>
+            <p id="exp">-</p>
+            <button id="getExpBtn">Get Exp</button>
+
+            <label for="heroClass">Hero Class:</label>
+            <p id="heroClass">-</p>
+
+        </div>
+        <div class="right-col">
+            <h2>Equipment</h2>
+
+            <label for="helmet">Helmet Name:</label>
+            <p id="helmet">-</p>
+
+            <label for="armor">Armor Name:</label>
+            <p id="armor">-</p>
+
+            <label for="weapon">Weapon Name:</label>
+            <p id="weapon">-</p>
+
+            <h2>Statistics</h2>
+
+            <label for="intelligence">Intelligence:</label>
+            <p id="intelligence">-</p>
+
+            <label for="strength">Strength:</label>
+            <p id="strength">-</p>
+
+            <label for="agility">Agility:</label>
+            <p id="agility">-</p>
+        </div>
+    </div>
+    <div class="items-row">
+        <h2>Items</h2>
+
+        <ul id="itemsList">
+        </ul>
+    </div>
+</div>
+
+<script>
+    var jsonHeroId = localStorage.getItem("jsonHeroId");
+
+    var heroData = JSON.parse(jsonHeroId);
+
+    const heroId = heroData.heroId;
+
+    fetchCharacterDetails();
+    fetchItems();
+    document.getElementById("getExpBtn").addEventListener("click", function() {
+        getExp();
+    });
+
+    function getExp(){
+        var currentLevel = parseInt(document.getElementById("level").textContent);
+        fetch("http://localhost:8080/hero/addexp", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({"heroId":heroId})
+        })
+            .then(response => response.json())
+            .then(data => {
+                fetchCharacterDetails();
+                if(parseInt(data.level)!=currentLevel){
+                    fetch("http://localhost:8080/hero/getrandomitem", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({"heroId":heroId})
+                    })
+                        .then(response => response.json())
+                        .then(itemData => {
+                            alert("Level up! Otrzymales nowy przedmiot: "+itemData.itemName);
+                            fetchItems();
+                        }).catch(error => {
+                        console.error("Error getiting new item:", error);
+                    });
+                }
+            }).catch(error => {
+            console.error("Error getiting exp:", error);
+        });
+    }
+
+    function fetchCharacterDetails() {
+        fetch("http://localhost:8080/hero/gethero", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({"heroId":heroId})
+        })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("name").textContent = data.heroName;
+                document.getElementById("level").textContent = data.level;
+                document.getElementById("exp").textContent = `${data.exp} / ${data.neededExp}`;
+                document.getElementById("heroClass").textContent = data.heroClass;
+                var equipmentData=data.equipment;
+
+                var armorData=equipmentData.armor;
+                if(armorData!=null) {
+                    document.getElementById("armor").textContent = armorData.itemName;
+                }
+                var weaponData=equipmentData.weapon;
+                if(weaponData!=null) {
+                    document.getElementById("weapon").textContent = weaponData.itemName;
+                }
+                var helmetData=equipmentData.helmet;
+                if(helmetData!=null) {
+                    document.getElementById("helmet").textContent = helmetData.itemName;
+                }
+
+            })
+            .catch(error => {
+                console.error("Error fetching character details:", error);
+            });
+
+        fetch("http://localhost:8080/hero/getherofullstat", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({"heroId":heroId})
+        })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("intelligence").textContent = data.intellect;
+                document.getElementById("strength").textContent = data.strength;
+                document.getElementById("agility").textContent = data.agility;
+            })
+            .catch(error => {
+                console.error("Error fetching character details:", error);
+            });
+    }
+
+    function fetchItems() {
+        fetch("http://localhost:8080/hero/bagitems", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({"heroId":heroId})
+        })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("itemsList").innerHTML = "";
+
+                data.forEach(item => {
+                    const listItem = document.createElement("li");
+                    listItem.textContent = `${item.itemName} - Level: ${item.requiredLevel} - Class: ${item.requiredClass} - Type: ${item.itemType} - Agility: ${item.bonusAgility} - Strength: ${item.bonusStrength} - Intelect: ${item.bonusIntellect}     `
+
+                    const assignButton = document.createElement("button");
+                    assignButton.textContent = "Wear";
+                    assignButton.addEventListener("click", function() {
+                        assignItem(item.id);
+                    });
+
+                    listItem.appendChild(assignButton);
+                    document.getElementById("itemsList").appendChild(listItem);
+                });
+            })
+            .catch(error => {
+                console.error("Error fetching items:", error);
+            });
+    }
+
+    function assignItem(item) {
+        fetch("http://localhost:8080/hero/wearitem", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ "heroId": heroId , itemId: item })
+        })
+            .then(response => response.json())
+            .then(data => {
+                location.reload();
+            })
+            .catch(error => {
+                console.error("Error assigning item:", error);
+            });
+    }
+    function homePage(){
+        window.location.href = "heroes.html";
+    }
+</script>
+</body>
+</html>
