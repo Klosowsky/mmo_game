@@ -30,5 +30,6 @@ public class Archer extends Hero {
         agility+=5;
         strength+=3;
         intellect+=1;
+        exp=0;
     }
 }
