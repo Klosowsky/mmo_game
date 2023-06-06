@@ -4,11 +4,12 @@ import com.to.backend.model.Equipment;
 import com.to.backend.model.Hero;
 import com.to.backend.model.HeroStatistics;
 
-public class HeroEquipmentDecorator extends Hero {
+public class HeroEquipmentDecorator extends HeroDecorator {
 
-    Hero hero;
+    //Hero hero;
     public HeroEquipmentDecorator(Hero hero){
-        this.hero = hero;
+        super(hero);
+        //this.hero = hero;
     }
 
 
